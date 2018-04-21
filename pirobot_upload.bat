@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\WinSCP\WinSCP.exe" /log="C:\Users\gavar\OneDrive\My Documents\Scripts\pirbotupload.log" /ini=nul /script="C:\Users\gavar\OneDrive\My Documents\Scripts\pirobot_upload.txt"

@@ -1,0 +1,25 @@
+lcd C:\Users\gavar\olivia_pi_robot\raspirobot3\
+
+# Connect
+open sftp://pi:raspberry@192.168.0.21/ -hostkey="ssh-ed25519 256 a8:1a:a0:63:8b:07:d6:32:7b:fa:b0:02:a1:4b:1f:54"
+# Change remote directory
+#cd /home/pi/raspirobot3
+cd /home/pi/OliviaRobot
+# move to local directory
+lcd C:\Users\gavar\olivia_pi_robot\OliviaRobot\
+#Syncronise to remote
+synchronize remote -delete C:\Users\gavar\olivia_pi_robot\OliviaRobot\ /home/pi/OliviaRobot
+# Disconnect
+close
+
+#open ftp://uploadadmin%40bramblebankwood.co.uk:OliviaJayn3%21@ftp.bramblebankwood.co.uk/
+#mkdir script_test
+#ls
+#close
+
+# Exit WinSCP
+exit
+
+# Execute the script using a command like:
+# "C:\Program Files (x86)\WinSCP\WinSCP.exe" /log="C:\Users\gavar\OneDrive\My Documents\Scripts\pirbotupload.log" /ini=nul /script="C:\Users\gavar\OneDrive\My Documents\Scripts\pirobot_upload.ba"
+
