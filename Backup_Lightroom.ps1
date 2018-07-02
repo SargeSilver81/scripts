@@ -1,3 +1,28 @@
+function Copy-File {
+    param( [string]$from, [string]$to)
+    $ffile = [io.file]::OpenRead($from)
+    $tofile = [io.file]::OpenWrite($to)
+    Write-Progress -Activity "Copying file" -status "$from -> $to" -PercentComplete 0
+    try {
+        [byte[]]$buff = new-object byte[] 4096
+        [int]$total = [int]$count = 0
+        do {
+            $count = $ffile.Read($buff, 0, $buff.Length)
+            $tofile.Write($buff, 0, $count)
+            $total += $count
+            if ($total % 1mb -eq 0) {
+                Write-Progress -Activity "Copying file" -status "$from -> $to" `
+                   -PercentComplete ([int]($total/$ffile.Length* 100))
+            }
+        } while ($count -gt 0)
+    }
+    finally {
+        $ffile.Dispose()
+        $tofile.Dispose()
+        Write-Progress -Activity "Copying file" -Status "Ready" -Completed
+    }
+}
+
  Write-Host "Backing Up Lightroom to OneDrive" -ForegroundColor Blue
  
  Write-Host "Adding temp drive location" -ForegroundColor Green
@@ -17,12 +42,12 @@
         $destPath2 = 'l:\'
 
         Get-ChildItem $temp_path -Recurse | % {
-            Write-Host "Uploading to OneDrive: " $_.FullName
+            #Write-Host "Uploading to OneDrive: " $_.FullName
             #Copy-Item  -Path $copyAdmin -Destination $AdminPath -Recurse -force
-            Copy-Item $_.FullName -Destination $destPath2 -force -ErrorAction Continue #SilentlyContinue
+            #Copy-Item $_.FullName -Destination $destPath2 -force -ErrorAction Continue #SilentlyContinue
+            Copy-File $_.FullName $destPath2
         }
 
         Write-Host "Removing temp drive location" -ForegroundColor Red
-        #Remove-PSDrive RAW_Backup
+        
         net use L: /delete
-        #Get-PSDrive -PSProvider FileSystem
