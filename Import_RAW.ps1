@@ -9,14 +9,18 @@ param(
         $destPath = 'C:\Users\gavar\Pictures\Lightroom\Gav_Argent\For_Import'
 
         Write-Host "## Lightroom Import##" -ForegroundColor Yellow
+        $Total = ( Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | Measure-Object ).Count;
+        $lc = 0
 
         Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | % {
-            Write-Host "Copying: " $_.FullName
+            Write-Host "Copying ( $lc/$Total ): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
 
+        $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | Measure-Object ).Count;
+        $lc = 0
         Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | % {
-            Write-Host "Copying: " $_.FullName
+            Write-Host "Copying ( $lc/$Total ): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
 
@@ -36,8 +40,11 @@ param(
           Write-Host "Folder already exists"
         }
 
+        $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF | Measure-Object ).Count;
+        $lc = 0
+
         Get-ChildItem $sourcePath -Recurse -filter *.NEF | % {
-            Write-Host "Moving to RAWBackupTemp: " $_.FullName
+            Write-Host "Moving to RAWBackupTemp ( $lc/$Total ): " $_.FullName
             Move-Item $_.FullName -Destination $temp_path -ErrorAction SilentlyContinue
         }
 
@@ -60,8 +67,13 @@ param(
         }
         $destPath2 = 'r:\'
 
+        Write-Host "Files to upload: "( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
+        $Total = ( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
+        $lc = 0
+
         Get-ChildItem $temp_path -Recurse -filter *.NEF | % {
-            Write-Host "Uploading to OneDrive: " $_.FullName
+            ++$lc
+            Write-Host "Uploading to OneDrive ( $lc/$Total ): " $_.FullName
             Move-Item $_.FullName -Destination $destPath2 -ErrorAction Continue #SilentlyContinue
         }
 
