@@ -13,6 +13,7 @@ param(
         $lc = 0
 
         Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | % {
+            ++$lc
             Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
@@ -20,6 +21,7 @@ param(
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | Measure-Object ).Count;
         $lc = 0
         Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | % {
+            ++$lc
             Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
@@ -44,6 +46,7 @@ param(
         $lc = 0
 
         Get-ChildItem $sourcePath -Recurse -filter *.NEF | % {
+            ++$lc
             Write-Host "Moving to RAWBackupTemp ($lc/$Total): " $_.FullName
             Move-Item $_.FullName -Destination $temp_path -ErrorAction SilentlyContinue
         }
