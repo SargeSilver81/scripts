@@ -13,14 +13,14 @@ param(
         $lc = 0
 
         Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | % {
-            Write-Host "Copying ( $lc/$Total ): " $_.FullName
+            Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
 
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | Measure-Object ).Count;
         $lc = 0
         Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | % {
-            Write-Host "Copying ( $lc/$Total ): " $_.FullName
+            Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
         }
 
@@ -44,7 +44,7 @@ param(
         $lc = 0
 
         Get-ChildItem $sourcePath -Recurse -filter *.NEF | % {
-            Write-Host "Moving to RAWBackupTemp ( $lc/$Total ): " $_.FullName
+            Write-Host "Moving to RAWBackupTemp ($lc/$Total): " $_.FullName
             Move-Item $_.FullName -Destination $temp_path -ErrorAction SilentlyContinue
         }
 
@@ -73,7 +73,7 @@ param(
 
         Get-ChildItem $temp_path -Recurse -filter *.NEF | % {
             ++$lc
-            Write-Host "Uploading to OneDrive ( $lc/$Total ): " $_.FullName
+            Write-Host "Uploading to OneDrive ($lc/$Total): " $_.FullName
             Move-Item $_.FullName -Destination $destPath2 -ErrorAction Continue #SilentlyContinue
         }
 
