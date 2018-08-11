@@ -1,0 +1,10 @@
+/dev/sda         1.82 TB  PARTITIONED
+/dev/sda1        1.49 TB  /mnt/NAS
+-------------------------------------
+-----------------------------------------------------------------------
+Volume          Volume size  FS     FS size     Free  TypeMount point
+-----------------------------------------------------------------------
+/dev/mmcblk0p1     43.20 MB  vfat                     part/boot
+/dev/mmcblk0p2     14.72 GB  ext4  14.72 GB  9.17 GB  part
+/dev/sda1           1.49 TB  ext4   1.49 TB  1.26 TB  part/mnt/NAS
+-----------------------------------------------------------------------
