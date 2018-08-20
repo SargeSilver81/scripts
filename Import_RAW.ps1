@@ -5,7 +5,7 @@ param(
     )
 
     if ($a -eq 'online' -OR $a -eq 'offline' ) {  
-        $sourcePath = 'F:\DCIM\100D3200\'
+        $sourcePath = 'F:\DCIM\*D3200\'
         $destPath = 'C:\Users\gavar\Pictures\Lightroom\Gav_Argent\For_Import'
 
         Write-Host "## Lightroom Import##" -ForegroundColor Yellow
