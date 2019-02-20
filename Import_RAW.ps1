@@ -70,6 +70,7 @@ param(
           Write-Host "Folder already exists"
         }
         $destPath2 = 'r:\'
+        $destPathNAS = 'P:\RAW_Import'
 
         Write-Host "Files to upload: "( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
         $Total = ( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
@@ -77,6 +78,8 @@ param(
 
         Get-ChildItem $temp_path -Recurse -filter *.NEF | % {
             ++$lc
+            Write-Host "Uploading to NAS ($lc/$Total): " $_.FullName
+            Copy-Item $_.FullName -Destination $destPathNAS -ErrorAction Continue #SilentlyContinue
             Write-Host "Uploading to OneDrive ($lc/$Total): " $_.FullName
             Move-Item $_.FullName -Destination $destPath2 -ErrorAction Continue #SilentlyContinue
         }
