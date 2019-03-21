@@ -13,7 +13,7 @@ param(
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | Measure-Object ).Count;
         $lc = 0
 
-        Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | % {
+        Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | ForEach-Object {
             ++$lc
             Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
@@ -21,7 +21,7 @@ param(
 
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | Measure-Object ).Count;
         $lc = 0
-        Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | % {
+        Get-ChildItem $sourcePath -Recurse -filter *.NEF -exclude _DSC* | ForEach-Object {
             ++$lc
             Write-Host "Copying ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPath -ErrorAction SilentlyContinue
@@ -46,7 +46,7 @@ param(
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.NEF | Measure-Object ).Count;
         $lc = 0
 
-        Get-ChildItem $sourcePath -Recurse -filter *.NEF | % {
+        Get-ChildItem $sourcePath -Recurse -filter *.NEF | ForEach-Object {
             ++$lc
             Write-Host "Moving to RAWBackupTemp ($lc/$Total): " $_.FullName
             Move-Item $_.FullName -Destination $temp_path -ErrorAction SilentlyContinue
@@ -76,7 +76,7 @@ param(
         $Total = ( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
         $lc = 0
 
-        Get-ChildItem $temp_path -Recurse -filter *.NEF | % {
+        Get-ChildItem $temp_path -Recurse -filter *.NEF | ForEach-Object {
             ++$lc
             Write-Host "Uploading to NAS ($lc/$Total): " $_.FullName
             Copy-Item $_.FullName -Destination $destPathNAS -ErrorAction Continue #SilentlyContinue
