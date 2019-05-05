@@ -9,7 +9,7 @@ param(
         #$destPath = 'C:\Users\gavar\Pictures\Lightroom\Gav_Argent\For_Import'
         $destPath = 'C:\Users\gavar\Pictures\RAW_Import'
 
-        Write-Host "## Lightroom Import##" -ForegroundColor Yellow
+        Write-Host "## RAW Camera Import##" -ForegroundColor Yellow
         $Total = ( Get-ChildItem $sourcePath -Recurse -filter _DSC*.NEF | Measure-Object ).Count;
         $lc = 0
 
