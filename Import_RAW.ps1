@@ -60,6 +60,10 @@ param(
         $net = new-object -ComObject WScript.Network
         $net.MapNetworkDrive("r:", "\\d.docs.live.net\FB814EDDAABC830D\RAW_Backup", $false, "gavargent@gmail.com", "OliviaJayn3")
 
+        $net = new-object -ComObject WScript.Network
+        $net.MapNetworkDrive("n:", "\\SILVERNAS\Photo\RAW_Import", $false)
+
+
         $temp_path = 'c:\RAWBackupTemp'
         if(!(Test-Path -Path $temp_path )){
             New-Item -ItemType directory -Path $temp_path
@@ -70,7 +74,7 @@ param(
           Write-Host "Folder already exists"
         }
         $destPath2 = 'r:\'
-        $destPathNAS = 'P:\RAW_Import'
+        $destPathNAS = 'n:\'
 
         Write-Host "Files to upload: "( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
         $Total = ( Get-ChildItem $temp_path -Recurse -filter *.NEF | Measure-Object ).Count;
@@ -87,5 +91,6 @@ param(
         Write-Host "Removing temp drive location" -ForegroundColor Red
         #Remove-PSDrive RAW_Backup
         net use R: /delete
+        net use N: /delete
         #Get-PSDrive -PSProvider FileSystem
     }
