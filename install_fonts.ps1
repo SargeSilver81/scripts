@@ -1,6 +1,6 @@
 $FONTS = 0x14;
 
-$FromPath = "C:\Users\gavar\OneDrive\Fonts";
+$FromPath = "G:\OneDrive\Fonts";
 
 $ObjShell = New-Object -ComObject Shell.Application;
 $ObjFolder = $ObjShell.Namespace($FONTS);
