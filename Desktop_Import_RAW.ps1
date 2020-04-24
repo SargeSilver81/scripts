@@ -1,12 +1,12 @@
 param(
     [Parameter(Mandatory=$true)]
-    [ValidateSet("online","offline","upload","olivia","NAS","video")]
+    [ValidateSet("online","offline","upload","olivia","NAS","video","forestcam")]
     [string]$a
     )
 # FOR OLIVIA
     if ($a -eq 'olivia' ) {  
         $sourcePath = 'E:\DCIM\*D3200\'
-        $destPath = 'G:\OneDrive\My Pictures\Nikon_D3200\Olivia'
+        $destPath = 'O:\OneDrive\My Pictures\Nikon_D3200\Olivia'
 
         if(!(Test-Path -Path $destPath )){
             New-Item -ItemType directory -Path $destPath
@@ -30,7 +30,7 @@ param(
 # FOR GAV
     if ($a -eq 'online' -OR $a -eq 'offline' ) {  
         $sourcePath = 'F:\DCIM\*NCZ_6\'
-        $destPath = 'G:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\DCIM\100NCZ_6'
+        $destPath = 'O:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\DCIM\100NCZ_6'
 
         if(!(Test-Path -Path $destPath )){
             New-Item -ItemType directory -Path $destPath
@@ -49,7 +49,7 @@ param(
 
         $lc = 0
 
-        Get-ChildItem $sourcePath -Recurse -include ('*.NEF','*.JPG') -Name | Out-File -FilePath 'G:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\ToUploadToNAS.txt' -Append
+        Get-ChildItem $sourcePath -Recurse -include ('*.NEF','*.JPG') -Name | Out-File -FilePath 'O:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\ToUploadToNAS.txt' -Append
 
         Get-ChildItem $sourcePath -Recurse -include ('*.NEF','*.JPG') | ForEach-Object {
             ++$lc
@@ -57,49 +57,9 @@ param(
             Move-Item -Path $_.FullName -Destination $destPath -Force
         }
     }
-    if ($a -eq 'online' -OR $a -eq 'NAS' ) {
-
-        Write-Host "# Adding temp drive location" -ForegroundColor Gray
-
-        $net = new-object -ComObject WScript.Network
-        $net.MapNetworkDrive("n:", "\\SILVERNAS\Photo\RAW_Import", $false) 
-        if ($LASTEXITCODE -eq 0){
-            write-host "# N: Mapped Successfully!" -ForegroundColor Green
-        } else {
-            Write-Error "N: NOT MAPPED - FAILING!" -ErrorAction Stop
-            $noDrive = "1"
-        }
-
-        if($noDrive -eq $null){
-            $temp_path = 'G:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\DCIM\100NCZ_6'
-            if(!(Test-Path -Path $temp_path )){
-                New-Item -ItemType directory -Path $temp_path
-                Write-Host "New folder created"
-            }
-            else
-            {
-            Write-Host "Folder already exists"
-            }
-            $destPathNAS = 'n:\'
-
-            # Use NAS file for list of files to upload
-            $file_list = Get-Content -Path 'G:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\ToUploadToNAS.txt'
-
-            foreach ($file in $file_list) {
-                Write-Host "Uploading: "$temp_path\$file" to: NAS"
-                Copy-Item $temp_path\$file $destPathNAS -ErrorAction Continue
-
-            }
-
-            Write-Host "Removing temp drive location" -ForegroundColor Red
-            net use N: /delete
-            Write-Host "Removing NAS Processing List" -ForegroundColor Red
-            Remove-Item -Path 'G:\OneDrive\My Pictures\Nikon_Z6\Z 6 7402118\ToUploadToNAS.txt' -Force
-        }
-    }
     if ($a -eq 'video' ) {
         $sourcePath = 'F:\DCIM\*NCZ_6\'
-        $destPath = 'G:\OneDrive\Videos\Z6_Videos'
+        $destPath = 'O:\OneDrive\Videos\Z6_Videos'
         if(!(Test-Path -Path $destPath )){
             New-Item -ItemType directory -Path $destPath
             Write-Host "Z6_Videos folder/path created"
@@ -117,47 +77,39 @@ param(
 
         $lc = 0
 
-        Get-ChildItem $sourcePath -Recurse -filter *.MP4 -Name | Out-File -FilePath 'G:\OneDrive\Videos\Z6_Videos\ToUploadToNAS.txt' -Append
+        Get-ChildItem $sourcePath -Recurse -filter *.MP4 -Name | Out-File -FilePath 'O:\OneDrive\Videos\Z6_Videos\ToUploadToNAS.txt' -Append
 
         Get-ChildItem $sourcePath -Recurse -filter *.MP4 | ForEach-Object {
             ++$lc
             Write-Host "Moving ($lc/$Total): " $_.FullName
             Move-Item -Path $_.FullName -Destination $destPath -Force
         }
+    }
+    if ($a -eq 'forestcam' ) {
+        $sourcePath = 'E:\DCIM\'
+        $destPath = 'O:\OneDrive\Videos\Forest-Cam\Import'
+        if(!(Test-Path -Path $destPath )){
+            New-Item -ItemType directory -Path $destPath
+            Write-Host "Forest-Cam folder/path created"
+        }
 
-        Write-Host "# Adding temp drive location" -ForegroundColor Gray
-    
-        $net = new-object -ComObject WScript.Network
-        $net.MapNetworkDrive("n:", "\\SILVERNAS\Video\Z6_Videos", $false) 
-            if ($LASTEXITCODE -eq 0){
-                write-host "# N: Mapped Successfully!" -ForegroundColor Green
-            } else {
-                Write-Error "N: NOT MAPPED - FAILING!" -ErrorAction Stop
-                $noDrive = "1"
-            }
-    
-            if($noDrive -eq $null){
-                $temp_path = 'G:\OneDrive\Videos\Z6_Videos'
-                if(!(Test-Path -Path $temp_path )){
-                    New-Item -ItemType directory -Path $temp_path
-                    Write-Host "New folder created"
-                } else {
-                    Write-Host "Folder already exists"
-                }
-                $destPathNAS = 'n:\'
-    
-                # Use NAS file for list of files to upload
-                $file_list = Get-Content -Path 'G:\OneDrive\Videos\Z6_Videos\ToUploadToNAS.txt'
-    
-                foreach ($file in $file_list) {
-                Write-Host "Uploading: "$temp_path\$file" to: NAS"
-                Copy-Item $temp_path\$file $destPathNAS -ErrorAction Continue
-    
-                }
+        Write-Host "#############- Forest Cam Import -#############" -ForegroundColor DarkBlue -BackgroundColor Yellow
 
-                Write-Host "Removing temp drive location" -ForegroundColor Red
-                net use N: /delete
-                Write-Host "Removing NAS Processing List" -ForegroundColor Red
-                Remove-Item -Path 'G:\OneDrive\Videos\Z6_Videos\ToUploadToNAS.txt' -Force
-            }
+        if (-not (Test-Path -Path $sourcePath)) {
+            throw 'Memory Card NOT Inserted!'
+        } else {
+            write-host '# Memory Card Inserted - Getting Videos' -ForegroundColor Green
+        }
+
+        $Total = ( Get-ChildItem $sourcePath -Recurse -filter *.AVI | Measure-Object ).Count;
+
+        $lc = 0
+
+        Get-ChildItem $sourcePath -Recurse -filter *.AVI -Name | Out-File -FilePath 'O:\OneDrive\Videos\Forest-Cam\Import\ToUploadToNAS.txt' -Append
+
+        Get-ChildItem $sourcePath -Recurse -filter *.AVI | ForEach-Object {
+            ++$lc
+            Write-Host "Moving ($lc/$Total): " $_.FullName
+            Move-Item -Path $_.FullName -Destination $destPath -Force
+        }
     }
